@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Чёрный котёнок и белая кошечка</title>
+<meta name="description" content="Сказка про двух котят, которые нашли один и тот же вечер.">
+<link rel="preload" as="image" href="img/paper.webp">
+<style>
+  :root{
+    --ink:#3a2f22;
+    --ink-soft:#6b5a44;
+    --ink-faint:#9c8a70;
+    --rubric:#8c3d2a;
+    --gold:#a8813f;
+    --page:#f3e6c9;
+    --page-2:#ecdcba;
+    --board:#6d4a2f;
+    --serif:"Cormorant Garamond","PT Serif","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --body:"Lora","PT Serif","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:clamp(17px,1.12vw,19px);
+    line-height:1.92;
+    background:#2d1d12;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* dark wooden table behind the book */
+  body::before{
+    content:"";
+    position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(120,80,45,.55), transparent 60%),
+      radial-gradient(100% 80% at 50% 100%, rgba(0,0,0,.75), transparent 70%),
+      repeating-linear-gradient(92deg, #2b1b11 0 3px, #332115 3px 7px, #2a1a10 7px 11px);
+  }
+  body::after{
+    content:"";
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(60% 55% at 50% 42%, rgba(255,196,120,.10), transparent 70%);
+  }
+
+  a{color:var(--rubric);text-decoration:none}
+  a:hover{text-decoration:underline}
+  img{max-width:100%;display:block}
+
+  /* ============ the book itself ============ */
+  .book{
+    position:relative;
+    max-width:820px;
+    margin:clamp(16px,4vw,56px) auto;
+    /* stitched binding edge */
+    background-color:var(--page);
+    background-image:url("img/paper.webp");
+    background-size:420px;
+    background-blend-mode:multiply;
+    border-radius:3px 9px 9px 3px;
+    box-shadow:
+      /* dark spine shadow on the left */
+      inset 14px 0 22px -14px rgba(80,52,26,.75),
+      inset 3px 0 0 rgba(150,110,70,.35),
+      /* page block thickness */
+      2px 0 0 #d9c49a,
+      4px 0 0 #cbb185,
+      6px 0 0 #bfa377,
+      8px 0 0 #b3976c,
+      10px 0 0 #a88c62,
+      /* lifting off the table */
+      0 30px 60px -24px rgba(0,0,0,.7),
+      0 70px 120px -60px rgba(0,0,0,.6);
+  }
+
+  /* paper grain + foxing on top of everything inside the book */
+  .book::after{
+    content:"";
+    position:absolute;inset:0;pointer-events:none;z-index:5;
+    border-radius:inherit;
+    box-shadow:inset 0 0 60px rgba(120,85,45,.28), inset 0 0 120px rgba(140,100,55,.14);
+    background-image:
+      radial-gradient(circle at 12% 88%, rgba(150,105,55,.10) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 74% 31%, rgba(150,105,55,.09) 0 1.5px, transparent 2px),
+      radial-gradient(circle at 38% 62%, rgba(130,90,45,.07) 0 1px, transparent 1.6px);
+    background-size:23px 23px, 31px 31px, 17px 17px;
+    mix-blend-mode:multiply;
+  }
+
+  .sheet{padding:0 clamp(22px,6vw,74px)}
+
+  /* ============ title page ============ */
+  .title-page{
+    padding:clamp(46px,9vw,92px) 0 clamp(36px,6vw,64px);
+    text-align:center;
+    position:relative;
+  }
+  .title-orn{
+    width:clamp(150px,30vw,215px);
+    height:auto;
+    margin:0 auto clamp(20px,3.4vw,30px);
+    /* the drawing sits on its own cream paper; blend it into the page */
+    mix-blend-mode:multiply;
+    filter:contrast(1.06) saturate(.92);
+  }
+  .title-page .over{
+    font-family:var(--sans);
+    font-size:.64rem;
+    font-weight:600;
+    letter-spacing:.34em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 clamp(16px,2.6vw,22px);
+  }
+  h1{
+    margin:0;
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(2.15rem,5.6vw,3.6rem);
+    line-height:1.08;
+    letter-spacing:-.015em;
+    color:#33291c;
+  }
+  h1 em{
+    display:block;
+    font-style:italic;
+    font-weight:300;
+    font-size:.72em;
+    margin-top:.14em;
+    color:var(--ink-soft);
+  }
+  .title-sub{
+    margin:clamp(26px,4vw,38px) auto 0;
+    max-width:30ch;
+    font-size:.98rem;
+    line-height:1.85;
+    color:var(--ink-soft);
+    font-style:italic;
+  }
+  .byline{
+    margin:clamp(30px,4.5vw,44px) 0 0;
+    font-family:var(--sans);
+    font-size:.62rem;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+  .flourish{
+    margin:clamp(26px,4vw,36px) auto 0;
+    width:180px;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold) 20%,var(--gold) 80%,transparent);
+    position:relative;
+  }
+  .flourish::after{
+    content:"";
+    position:absolute;left:50%;top:-3px;
+    width:7px;height:7px;margin-left:-3.5px;
+    border-radius:50%;
+    background:var(--rubric);
+    box-shadow:0 0 0 3px var(--page);
+  }
+
+  /* ============ contents ============ */
+  .toc{
+    padding:clamp(30px,5vw,50px) 0 clamp(40px,6vw,70px);
+    border-top:1px solid rgba(140,105,60,.28);
+  }
+  .toc h3{
+    margin:0 0 clamp(20px,3.4vw,30px);
+    font-family:var(--sans);
+    font-size:.66rem;
+    font-weight:700;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    text-align:center;
+  }
+  .toc ol{list-style:none;margin:0;padding:0}
+  .toc li{margin:0}
+  .toc a{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    padding:9px 2px;
+    color:var(--ink);
+    font-size:1.02rem;
+    border-bottom:1px dotted rgba(140,105,60,.35);
+  }
+  .toc a:hover{background:rgba(168,129,63,.10);text-decoration:none}
+  .toc .toc-n{
+    font-family:var(--serif);
+    font-size:.82rem;
+    letter-spacing:.12em;
+    color:var(--rubric);
+    min-width:3.4ch;
+    flex:none;
+  }
+  .toc .toc-t{font-family:var(--serif);font-size:1.1rem}
+
+  /* ============ pages ============ */
+  .page{
+    position:relative;
+    padding:clamp(38px,7vw,74px) 0 clamp(44px,7vw,72px);
+    border-top:1px solid rgba(140,105,60,.22);
+  }
+  .page:first-of-type{border-top:0}
+
+  /* the leaf edge between two sheets: a soft crease plus a shadow that
+     falls on the paper underneath, so the book reads as stacked leaves */
+  .page + .page::before{
+    content:"";
+    position:absolute;
+    left:-1px;right:-1px;
+    top:-9px;
+    height:18px;
+    pointer-events:none;
+    background:
+      linear-gradient(180deg,
+        rgba(88,58,26,.20) 0,
+        rgba(255,250,235,.55) 3px,
+        rgba(255,252,242,.85) 5px,
+        rgba(150,112,64,.10) 7px,
+        transparent 9px,
+        rgba(210,182,138,.35) 10px,
+        rgba(255,252,242,.7) 12px,
+        rgba(120,86,46,.14) 15px,
+        transparent 18px);
+    mix-blend-mode:multiply;
+  }
+
+  /* page number in the outer corner */
+  .folio{
+    position:absolute;
+    top:clamp(18px,3vw,26px);
+    right:0;
+    display:flex;align-items:center;gap:9px;
+    font-family:var(--sans);
+    font-size:.6rem;
+    letter-spacing:.28em;
+    color:var(--ink-faint);
+  }
+  .folio::before{
+    content:"";
+    width:26px;height:1px;
+    background:rgba(140,105,60,.45);
+  }
+
+  .ch-head{text-align:center;margin-bottom:clamp(26px,4.4vw,44px)}
+  .ch-num{
+    display:block;
+    font-family:var(--serif);
+    font-size:.86rem;
+    letter-spacing:.36em;
+    color:var(--rubric);
+    margin-bottom:10px;
+  }
+  .ch-head h2{
+    margin:0;
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:clamp(1.6rem,3.9vw,2.35rem);
+    line-height:1.16;
+    letter-spacing:-.01em;
+    color:#33291c;
+  }
+  .ch-rule{
+    display:block;
+    width:64px;height:1px;
+    margin:clamp(16px,2.6vw,22px) auto 0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  }
+
+  .ch-body p{
+    margin:0 0 1.05em;
+    text-align:justify;
+    hyphens:auto;
+    -webkit-hyphens:auto;
+  }
+  .ch-body p:last-child{margin-bottom:0}
+
+  /* drop cap */
+  .drop{padding-top:2px}
+  .drop .cap{
+    float:left;
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:3.55em;
+    line-height:.84;
+    padding:.06em .12em 0 0;
+    color:var(--rubric);
+    text-shadow:0 1px 0 rgba(255,240,210,.55);
+  }
+
+  /* small caps opener for the very first paragraph of a page */
+  .page-game .ch-body p{text-align:left}
+
+  /* ============ plates ============ */
+  /* no mat, no frame: the picture is printed straight onto the leaf,
+     its edges eaten away by the paper */
+  .plate{
+    margin:clamp(26px,4.4vw,42px) 0 0;
+    padding:0;
+    position:relative;
+  }
+  .plate-inner{
+    position:relative;
+    padding:0;
+    /* soft fade of all four edges into the paper */
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%),
+      linear-gradient(180deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+    -webkit-mask-composite:source-in;
+    mask-image:
+      linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%),
+      linear-gradient(180deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+    mask-composite:intersect;
+  }
+  .plate img{
+    width:100%;height:auto;
+    /* sink the print into the stock: a touch of the paper's warmth */
+    filter:saturate(.96) contrast(1.04) sepia(.06);
+    mix-blend-mode:multiply;
+  }
+  .plate figcaption{
+    margin:12px 2px 0;
+    font-family:var(--sans);
+    font-size:.62rem;
+    font-style:italic;
+    letter-spacing:.06em;
+    color:#7d6647;
+    text-align:right;
+    padding-bottom:4px;
+  }
+
+  /* vertical plate for portrait art (first chapter) */
+  .plate.tall{max-width:78%;margin-left:auto;margin-right:auto}
+
+  /* ============ games ============ */
+  .page-game{
+    background:none;
+  }
+  .game-wrap{margin:clamp(22px,3.4vw,32px) 0 0}
+  .game-hud{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    margin:0 0 14px;
+    font-family:var(--sans);font-size:.66rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .game-hud .count{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+  .dots{display:flex;gap:6px}
+  .dots i{
+    width:6px;height:6px;border-radius:50%;
+    background:transparent;box-shadow:0 0 0 1px rgba(140,105,60,.5) inset;
+    transition:background .3s ease,box-shadow .3s ease;
+  }
+  .dots i.on{background:var(--rubric);box-shadow:0 0 0 1px var(--rubric) inset}
+
+  .field{
+    position:relative;overflow:hidden;
+    box-shadow:0 0 0 1px rgba(120,88,48,.45),0 18px 34px -20px rgba(70,45,20,.7);
+    touch-action:manipulation;
+  }
+  .field img.bg{width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+
+  .yarn{
+    position:absolute;width:clamp(36px,9vw,58px);aspect-ratio:1;
+    transform:translate(-50%,-50%);
+    border:0;padding:0;background:none;cursor:pointer;border-radius:50%;
+  }
+  .yarn::before{
+    content:"";position:absolute;inset:-45%;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,226,158,.32),transparent 68%);
+    opacity:0;animation:halo 3.6s ease-in-out infinite;
+  }
+  @keyframes halo{0%,100%{opacity:0}50%{opacity:.9}}
+  .yarn:hover::before{animation-duration:1.5s}
+  .yarn:focus-visible{outline:2px solid var(--gold);outline-offset:6px}
+  .yarn.found{pointer-events:none}
+  .yarn.found::before{opacity:0 !important;animation:none}
+  .yarn.found::after{
+    content:"";position:absolute;inset:-30%;border-radius:50%;
+    border:1.5px solid rgba(255,226,160,.95);
+    box-shadow:0 0 14px 3px rgba(255,210,120,.5);
+    animation:ringout .9s cubic-bezier(.2,.8,.3,1) forwards;
+  }
+  .yarn .num{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    font-family:var(--sans);font-size:.6rem;font-weight:700;
+    width:18px;height:18px;line-height:18px;text-align:center;
+    border-radius:50%;background:rgba(255,236,193,.95);
+    color:#2a2116;box-shadow:0 2px 6px rgba(0,0,0,.35);
+  }
+  @keyframes ringout{to{transform:scale(2.1);opacity:0}}
+
+  .night-field{background:#0b0f1c}
+  .night-field .star{
+    position:absolute;transform:translate(-50%,-50%);
+    border:0;padding:0;background:none;cursor:crosshair;
+    width:24px;height:24px;border-radius:50%;
+    opacity:0;transition:opacity .6s ease;
+  }
+  .night-field.ready .star{opacity:1}
+  .night-field .star::before{
+    content:"";position:absolute;inset:45%;border-radius:50%;
+    background:#fff8e3;box-shadow:0 0 6px 2px rgba(255,246,220,.7);
+    animation:twinkle var(--tw,3s) ease-in-out infinite;
+  }
+  @keyframes twinkle{0%,100%{transform:scale(.55);opacity:.45}50%{transform:scale(1);opacity:1}}
+
+  .heart-hit{
+    position:absolute;transform:translate(-50%,-50%);
+    width:24px;height:24px;border-radius:50%;
+    border:0;padding:0;background:none;cursor:pointer;
+  }
+  .heart-hit::before{
+    content:"";position:absolute;inset:40%;border-radius:50%;
+    background:#ffd27a;box-shadow:0 0 14px 5px rgba(255,190,90,.55);
+    animation:ember 2.6s ease-in-out infinite;
+  }
+  @keyframes ember{0%,100%{transform:scale(.8);opacity:.7}50%{transform:scale(1.25);opacity:1}}
+  .heart-hit.marked::before{
+    background:var(--rubric);box-shadow:0 0 18px 7px rgba(140,61,42,.7);
+    animation:none;transform:scale(1.1);
+  }
+
+  .reticle{
+    position:absolute;width:30px;height:30px;transform:translate(-50%,-50%);
+    border-radius:50%;pointer-events:none;
+    border:1px solid rgba(255,240,210,.5);
+    animation:ringout .7s ease-out forwards;
+  }
+
+  .thermo{
+    display:flex;align-items:center;gap:11px;margin:14px 0 0;
+    font-family:var(--sans);font-size:.66rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .thermo .meter{flex:1;height:3px;background:rgba(140,105,60,.28);border-radius:99px;overflow:hidden}
+  .thermo .meter i{
+    display:block;height:100%;width:8%;
+    background:linear-gradient(90deg,#7d94b8,var(--rubric));
+    transition:width .45s cubic-bezier(.2,.7,.3,1);
+  }
+  .thermo .word{min-width:12ch;text-align:right;color:var(--ink);font-weight:600;letter-spacing:.1em}
+
+  /* puzzle */
+  .puzzle-grid{
+    display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+    gap:clamp(16px,3vw,30px);align-items:start;
+  }
+  .board{
+    position:relative;width:100%;display:grid;
+    grid-template-columns:repeat(3,1fr);
+    background:#241a11;overflow:hidden;
+    aspect-ratio:1320/1206;
+    box-shadow:0 0 0 1px rgba(120,88,48,.5),0 18px 34px -20px rgba(70,45,20,.7);
+  }
+  .board .slot{
+    position:relative;overflow:hidden;
+    border:1px solid rgba(243,230,201,.12);
+    background:#1d150e;transition:box-shadow .25s ease;
+  }
+  .board .slot::before{
+    content:"";position:absolute;inset:0;
+    background-image:var(--ghost);background-size:300% 200%;
+    background-position:var(--gx) var(--gy);
+    opacity:.16;filter:grayscale(.25);transition:opacity .3s ease;
+  }
+  .board.no-ghost .slot::before{opacity:0}
+  .board .slot.filled::before{opacity:0}
+  .board .slot img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    animation:settle .45s cubic-bezier(.2,.8,.3,1) both;
+  }
+  @keyframes settle{from{opacity:0;transform:scale(1.08)}to{opacity:1;transform:none}}
+  .board .slot.hot{box-shadow:0 0 0 2px var(--gold) inset}
+  .board .slot.filled{box-shadow:0 0 0 1px rgba(168,129,63,.5) inset}
+
+  .tray{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:12px 0 0}
+  .tray .piece{
+    position:relative;border:0;padding:0;background:none;cursor:grab;
+    overflow:hidden;aspect-ratio:440/603;
+    box-shadow:0 0 0 1px rgba(120,88,48,.5),0 8px 16px -10px rgba(70,45,20,.7);
+    transition:transform .22s cubic-bezier(.2,.7,.3,1),box-shadow .22s ease,opacity .3s ease;
+  }
+  .tray .piece img{width:100%;height:100%;object-fit:cover}
+  .tray .piece:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 0 1px var(--gold),0 14px 26px -12px rgba(70,45,20,.8)}
+  .tray .piece.chosen{box-shadow:0 0 0 2px var(--rubric),0 14px 26px -12px rgba(140,61,42,.6);transform:translateY(-4px)}
+  .tray .piece.placed{opacity:0;pointer-events:none;transform:scale(.85)}
+  .tray:empty{display:none}
+
+  .puzzle-side p{
+    margin:0 0 12px;color:var(--ink-soft);font-size:.92rem;line-height:1.7;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:none;border:1px solid rgba(140,105,60,.45);
+    padding:8px 13px;cursor:pointer;
+    font-family:var(--sans);font-size:.64rem;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);
+    transition:border-color .25s ease,color .25s ease;
+  }
+  .btn:hover{border-color:var(--ink-soft);color:var(--ink)}
+  .btn[aria-pressed="true"]{border-color:var(--rubric);color:var(--rubric)}
+  .puz-stat{
+    margin-top:18px;font-family:var(--sans);font-size:.64rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);
+  }
+  .puz-stat b{color:var(--ink);font-weight:700;font-size:.86rem}
+
+  .win{
+    display:none;margin:20px 0 0;
+    padding:16px 18px;
+    border-left:2px solid var(--rubric);
+    background:rgba(220,200,160,.35);
+  }
+  .win.show{display:block;animation:rise .55s cubic-bezier(.22,.75,.24,1) both}
+  .win p{margin:0;color:var(--ink-soft);font-size:.94rem;max-width:52ch}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ============ the end ============ */
+  .colophon{
+    padding:clamp(46px,8vw,90px) 0 clamp(50px,8vw,80px);
+    text-align:center;
+    border-top:1px solid rgba(140,105,60,.22);
+  }
+  .colophon .orn{
+    width:clamp(120px,24vw,170px);height:auto;
+    margin:0 auto clamp(20px,3.4vw,30px);
+    mix-blend-mode:multiply;
+    filter:contrast(1.06) saturate(.92);
+  }
+  .colophon p{
+    margin:0 auto 1em;max-width:36ch;
+    font-size:.96rem;color:var(--ink-soft);line-height:1.9;
+  }
+  .seal{
+    display:inline-block;margin-top:clamp(22px,3.6vw,32px);
+    width:44px;height:44px;line-height:44px;
+    background:var(--rubric);color:#f7ecd6;
+    font-family:var(--serif);font-size:1.2rem;
+    border-radius:2px;transform:rotate(-3deg);
+    box-shadow:0 5px 14px -7px rgba(140,61,42,.9);
+    user-select:none;
+  }
+
+  /* ============ reading aids ============ */
+  .toolbar{
+    position:fixed;
+    left:50%;transform:translateX(-50%);
+    bottom:clamp(12px,2.4vw,22px);
+    z-index:60;
+    display:flex;align-items:center;gap:6px;
+    padding:7px 9px;
+    background:rgba(46,30,18,.92);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(200,165,110,.28);
+    border-radius:999px;
+    box-shadow:0 12px 30px -12px rgba(0,0,0,.8);
+    font-family:var(--sans);
+    opacity:0;pointer-events:none;
+    transition:opacity .35s ease,transform .35s ease;
+  }
+  .toolbar.show{opacity:1;pointer-events:auto}
+  .toolbar button{
+    background:none;border:0;cursor:pointer;
+    color:#e4d3b4;
+    font-family:var(--sans);font-size:.62rem;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;
+    padding:7px 10px;border-radius:999px;
+    transition:background .2s ease,color .2s ease;
+  }
+  .toolbar button:hover{background:rgba(200,165,110,.16);color:#fff3dc}
+  .toolbar .sep{width:1px;height:16px;background:rgba(200,165,110,.28);margin:0 2px}
+  .toolbar .pct{
+    color:#bfa477;font-size:.6rem;letter-spacing:.14em;
+    padding:0 6px;min-width:4ch;text-align:center;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .progress{
+    position:fixed;top:0;left:0;height:2px;width:0;
+    background:linear-gradient(90deg,#8c3d2a,#c9a227);
+    z-index:70;
+    transition:width .12s linear;
+  }
+
+  /* ============ responsive ============ */
+  @media (max-width:760px){
+    .book{
+      margin:0;
+      border-radius:0;
+      box-shadow:0 0 0 1px rgba(120,85,45,.5), 0 20px 40px -20px rgba(0,0,0,.8);
+    }
+    .sheet{padding:0 clamp(18px,5vw,30px)}
+    .ch-body p{text-align:left;hyphens:none}
+    .plate.tall{max-width:100%}
+    .puzzle-grid{grid-template-columns:1fr}
+    .toolbar{bottom:8px;padding:5px 7px;gap:3px}
+    .toolbar button{padding:6px 7px;font-size:.56rem}
+    .progress{height:3px}
+  }
+  @media (max-width:420px){
+    .toolbar .pct{display:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+    }
+    html{scroll-behavior:auto}
+  }
+
+  @media print{
+    body{background:#fff}
+    body::before,body::after,.toolbar,.progress{display:none !important}
+    .book{box-shadow:none;background:#fff;max-width:none;margin:0}
+    .page{page-break-inside:avoid;break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="book">
+  <div class="sheet">
+
+    <section class="title-page">
+      <img class="title-orn" src="img/vignette.webp" alt="" width="700" height="700">
+      <p class="over">Сказка в четырнадцати главах</p>
+      <h1>Чёрный котёнок<em>и белая кошечка</em></h1>
+      <p class="title-sub">
+        Про дождь, про тёплое окно<br>
+        и про то, что вечер бывает один на двоих
+      </p>
+      <div class="flourish" aria-hidden="true"></div>
+      <p class="byline">для той, кто это читает</p>
+    </section>
+
+    <section class="toc">
+      <h3>Оглавление</h3>
+      <ol>
+        <li><a href="#ch1"><span class="toc-n">I</span><span class="toc-t">Дождь</span></a></li>
+        <li><a href="#ch2"><span class="toc-n">II</span><span class="toc-t">Пуговица</span></a></li>
+        <li><a href="#ch3"><span class="toc-n">III</span><span class="toc-t">Кошечка, которая читала</span></a></li>
+        <li><a href="#ch4"><span class="toc-n">IV</span><span class="toc-t">Пустое место</span></a></li>
+        <li><a href="#ch5"><span class="toc-n">V</span><span class="toc-t">Знакомство</span></a></li>
+        <li><a href="#ch6"><span class="toc-n">VI</span><span class="toc-t">Каплей больше</span></a></li>
+        <li><a href="#ch7"><span class="toc-n">VII</span><span class="toc-t">Клубки</span></a></li>
+        <li><a href="#ch8"><span class="toc-n">VIII</span><span class="toc-t">Лестница</span></a></li>
+        <li><a href="#ch9"><span class="toc-n">IX</span><span class="toc-t">Чердак</span></a></li>
+        <li><a href="#ch10"><span class="toc-n">X</span><span class="toc-t">Маяк</span></a></li>
+        <li><a href="#ch11"><span class="toc-n">XI</span><span class="toc-t">Светляки</span></a></li>
+        <li><a href="#ch12"><span class="toc-n">XII</span><span class="toc-t">Первый снег</span></a></li>
+        <li><a href="#ch13"><span class="toc-n">XIII</span><span class="toc-t">Корзина</span></a></li>
+        <li><a href="#ch14"><span class="toc-n">XIV</span><span class="toc-t">Рассвет</span></a></li>
+        <li><a href="#ch15"><span class="toc-n">·</span><span class="toc-t">Игра первая. Шесть клубков</span></a></li>
+        <li><a href="#ch16"><span class="toc-n">·</span><span class="toc-t">Игра вторая. Не та звезда</span></a></li>
+        <li><a href="#ch17"><span class="toc-n">·</span><span class="toc-t">Игра третья. Складка</span></a></li>
+      </ol>
+    </section>
+
+    
+    <section class="page" id="ch1" data-n="1">
+      <div class="folio"><span class="folio-n">01</span></div>
+      <header class="ch-head">
+        <span class="ch-num">I</span>
+        <h2>Дождь</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">Д</span>ождь в этом городе начинается без стука.</p>
+        <p>Сначала он просто висит в воздухе, будто кто-то забыл его выключить. Потом собирается каплями на водосточных трубах. И только когда трубы наполнятся до края, весь сразу падает вниз.</p>
+        <p>Уголёк знал это, потому что жил под трубой уже неделю.</p>
+        <p>Он был маленький и весь чёрный, только на груди росло белое пятнышко размером с палец. Оно было единственным светлым на нём. Уголёк думал, что пятнышко это отметина, по которой его когда-нибудь узнают.</p>
+        <p>Он сидел на крыльце у чужого дома. Дом был деревянный, высокий, с башенкой. В башенке горело круглое окно, как в будильнике.</p>
+        <p>За окном жили. Он понял это по запаху: от щели под дверью шло чаем, мокрой шерстью и чем-то ещё, тёплым, для чего у него не было слова.</p>
+        <p>Уголёк не мяукал. Его мама говорила: мяукать надо, когда тебя точно услышат. А тут его никто не слушал.</p>
+        <p>Он просто сидел и ждал, когда кончится дождь.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-01-rain">
+        <div class="plate-inner">
+          <img src="img/ch-01-rain.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>круглое окно наверху</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch2" data-n="2">
+      <div class="folio"><span class="folio-n">02</span></div>
+      <header class="ch-head">
+        <span class="ch-num">II</span>
+        <h2>Пуговица</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">Д</span>ождь не кончался. Уголёк перестал ждать и стал смотреть под ноги.</p>
+        <p>Под ногами была вторая ступенька. Доска, стёртая посередине, с двумя гвоздиками по краям. И на ней лежала пуговица.</p>
+        <p>Пуговица была круглая, тёмная, с четырьмя дырками, и по краю у неё шёл узор, тонкий, как след птичьей лапы.</p>
+        <p>Уголёк потрогал её лапой. Она была холодная, но не мокрая, потому что лежала под козырьком.</p>
+        <p>Он сел рядом и стал думать.</p>
+        <p>Думать он умел только одно: если вещь лежит у чужого дома, значит, она чья-то. Если она чья-то, значит, её кто-то потерял. А если кто-то потерял, значит, этот кто-то, может быть, ищет.</p>
+        <p>Это было новое для него. Он сам ни разу не терялся, потому что его никто не искал. Мама ушла за едой вечером и не вернулась. Он ждал её ночь, потом день, потом перестал считать.</p>
+        <p>Пуговица лежала у него на лапе, и запах от неё никуда не исчезал. Табак, немного воска и что-то ещё, старое.</p>
+        <p>Тогда Уголёк решил. Он взял её в зубы и поднялся к двери.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-02-button">
+        <div class="plate-inner">
+          <img src="img/ch-02-button.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>вторая ступенька</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch3" data-n="3">
+      <div class="folio"><span class="folio-n">03</span></div>
+      <header class="ch-head">
+        <span class="ch-num">III</span>
+        <h2>Кошечка, которая читала</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">Д</span>верь ему не открыли.</p>
+        <p>Он посидел под ней, потом на крыльце, потом опять под дверью. К утру дождь перестал, и Уголёк уснул прямо на ступеньке, свернувшись так, чтобы пуговица была внутри, между лапами.</p>
+        <p>А в это время внутри, за дверью, жила белая кошечка.</p>
+        <p>Её звали Снежка. Она была на пол-лета старше Уголька и считала себя взрослой, потому что умела открывать шпингалет и знала, где лежат спички.</p>
+        <p>У неё было всё на месте. Подушка у окна, чашка с голубым ободком, полка книг, которые читал старик. Старик читал вслух по вечерам, а Снежка слушала и запоминала.</p>
+        <p>Из всех книжек она любила одну. Про маяк.</p>
+        <p>В той книжке на последней странице была нарисована скала, и на скале стоял маяк, и от него шёл свет. Снежка была уверена, что видела этот маяк из окна. Проверить не могла: на улицу она выходила один раз, в прошлом марте, дошла до второго фонаря и вернулась бегом, потому что на неё посмотрел голубь.</p>
+        <p>Больше она не выходила.</p>
+        <p>В ту ночь старик уснул в кресле, и книжка лежала у него на груди, и серая кошка спала на ковре.</p>
+        <p>Снежка сидела на подоконнике и смотрела на своё отражение в тёмном стекле. За стеклом ничего не было видно, только она сама. Поэтому она не сразу поняла, что происходит, когда внизу, на крыльце, кто-то очень тихо перестал шевелиться.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-03-reading">
+        <div class="plate-inner">
+          <img src="img/ch-03-reading.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>пока он спал</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch4" data-n="4">
+      <div class="folio"><span class="folio-n">04</span></div>
+      <header class="ch-head">
+        <span class="ch-num">IV</span>
+        <h2>Пустое место</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">У</span>тром Снежка нашла пустое место.</p>
+        <p>Старик встал и ушёл на кухню, и пальто, которое висело на гвозде у двери, осталось висеть одно.</p>
+        <p>Пальто было старое, выходное, из тёмной шерсти, и по воротнику у него шли пуговицы, такие же тёмные, с четырьмя дырками и узором по краю.</p>
+        <p>Одной не было.</p>
+        <p>Снежка долго смотрела на это место. Оно было круглое, обшитое, и оттуда торчали две короткие нитки, завязанные узелком.</p>
+        <p>Пальто старик не носил очень давно. Но каждую зиму он снимал его с гвоздя и что-то с ним делал. То пришивал, то отпарывал, то просто стоял перед зеркалом и держал его на весу.</p>
+        <p>После этого он садился в кресло и подолгу молчал, а серая кошка приходила и ложилась ему на ноги.</p>
+        <p>Снежка знала про пальто одну вещь. Пуговица пропала в тот день, когда старик вернулся с кладбища.</p>
+        <p>Снежка тогда была ещё котёнком и не понимала, что такое кладбище. Она понимала только, что вернулся он без пальто на плечах, в одном пиджаке, и нёс его в руках, аккуратно, как носят что-то тяжёлое.</p>
+        <p>Она посмотрела на пустое место ещё раз. Потом встала, потянулась, вздохнула так, как вздыхают взрослые, и пошла вниз.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-04-empty">
+        <div class="plate-inner">
+          <img src="img/ch-04-empty.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>одной не хватает</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch5" data-n="5">
+      <div class="folio"><span class="folio-n">05</span></div>
+      <header class="ch-head">
+        <span class="ch-num">V</span>
+        <h2>Знакомство</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">О</span>ни встретились посередине улицы, у лужи, в которой плавала луна.</p>
+        <p>Снежка никогда не видела, чтобы кто-то был настолько мокрым. Уголёк никогда не видел ничего белее.</p>
+        <p>Он поставил пуговицу на камень между ними. Не отдал, а именно поставил, чтобы было видно.</p>
+        <p>Снежка узнала её сразу. И тогда она сделала то, чего не делала никогда: села в лужу, чтобы быть с ним на одном уровне, и сказала первое, что пришло в голову.</p>
+        <p>Она сказала: это наше.</p>
+        <p>Уголёк не понял. Он думал, что пуговица ничья, а она оказалась наша, и это слово было новым, и от него пахло тем же, чем от щели под дверью.</p>
+        <p>Он спросил: а ты кто?</p>
+        <p>Снежка сказала: я та, у кого есть дом, и я тебе его покажу, но сначала нам надо вернуть это на место, потому что без этого дом не совсем дом.</p>
+        <p>Уголёк не спросил, почему. Он вообще был не из тех, кто много спрашивает. Он поднял пуговицу и пошёл за ней.</p>
+        <p>Дождь кончился, пока они шли. Это заметил только Уголёк: с шерсти наконец перестало капать.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-05-meeting">
+        <div class="plate-inner">
+          <img src="img/ch-05-meeting.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>посередине улицы</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch6" data-n="6">
+      <div class="folio"><span class="folio-n">06</span></div>
+      <header class="ch-head">
+        <span class="ch-num">VI</span>
+        <h2>Каплей больше</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">В</span> дом они вошли не через парадную дверь, а через кухню, потому что кухонная дверца была без замка.</p>
+        <p>Старик спал в кресле. Серая кошка открыла один глаз, посмотрела на две мокрые фигурки, вздохнула и закрыла его снова. Так взрослые говорят: я вас не видела, но я всё знаю.</p>
+        <p>На кухне капало с потолка в кастрюлю. Тонко, ровно, с паузами.</p>
+        <p>Уголёк сел под капелью и стал смотреть, как капля растёт, набухает, тянется вниз и срывается. Он насчитал тридцать одну каплю и на тридцать второй уснул, потому что тридцать один раз было достаточно для дня, в котором он нашёл пуговицу, спасся от дождя и узнал слово наше.</p>
+        <p>Снежка сидела рядом и не спала. Она смотрела на свой дом с той стороны, с которой никогда его не видела, и на полку книг, и на кресло, и ей было странно, что всё это может быть не на месте.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-06-kitchen">
+        <div class="plate-inner">
+          <img src="img/ch-06-kitchen.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>у него в зубах</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch7" data-n="7">
+      <div class="folio"><span class="folio-n">07</span></div>
+      <header class="ch-head">
+        <span class="ch-num">VII</span>
+        <h2>Клубки</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">У</span>тром Снежка показала ему дом.</p>
+        <p>В шкафу нашлась корзинка с шерстью, и Снежка сказала: это для варежек. Уголёк сказал: это для того, чтобы размотать. Он был прав.</p>
+        <p>Они размотали шесть клубков за один вечер. Красный укатился под комод. Голубой обмотался вокруг ножки стула и стал похож на столб. Жёлтый упал в корзину с вязанием, и его искали полчаса, и это было нечестно.</p>
+        <p>Старик вошёл, увидел пол, полностью покрытый шерстью, и двух котов, которые делали вид, что они тут проходили мимо. Он постоял, посмотрел и сказал: ну, хоть не порвали.</p>
+        <p>Уголёк ждал, что его прогонят. Он был готов к этому. К тому, что его не станут прогонять, он готов не был.</p>
+        <p>Пуговицу он всё это время держал при себе и никому не показывал. Он ждал подходящего момента и не знал, как он выглядит.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-07-yarn">
+        <div class="plate-inner">
+          <img src="img/ch-07-yarn.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>пол, который никто не убрал</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch8" data-n="8">
+      <div class="folio"><span class="folio-n">08</span></div>
+      <header class="ch-head">
+        <span class="ch-num">VIII</span>
+        <h2>Лестница</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">В</span> каждом доме есть место, куда никто не ходит. В этом доме оно было наверху.</p>
+        <p>За дверцей с медной ручкой начиналась лестница. Она уходила вверх, и в её конце всегда было темно. Уголёк обошёл эту дверцу три раза. На четвёртый Снежка сказала: ну иди уже.</p>
+        <p>Он поднялся первым. Она за ним, на три ступеньки ниже, потому что по лестнице не ходят рядом.</p>
+        <p>Ступеньки скрипели по очереди, каждая своим голосом. Седьмая сказала: не надо. Восьмая сказала: поздно.</p>
+        <p>Наверху было тихо. Не страшно, просто тихо, как бывает в чужом шкафу, когда понимаешь, что тебя никто не ищет.</p>
+        <p>И там было окно.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-08-staircase">
+        <div class="plate-inner">
+          <img src="img/ch-08-staircase.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>вверх по лестнице</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch9" data-n="9">
+      <div class="folio"><span class="folio-n">09</span></div>
+      <header class="ch-head">
+        <span class="ch-num">IX</span>
+        <h2>Чердак</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">Ч</span>ердак оказался больше, чем весь дом.</p>
+        <p>Круглое окно было открыто, и в него входила ночь. Звёзды лежали густо, как шерсть на полу.</p>
+        <p>Вокруг стояли сундуки. Пахло пылью и лавандой. В углу стоял телескоп, весь медный, слегка наклонённый, будто от него только что отошли. На гвозде висела карта неба, а под картой лежала жестянка из-под чая, и в ней, если потрясти, что-то стучало.</p>
+        <p>Снежка залезла на сундук и сняла жестянку. В ней было пять пуговиц. Такие же, тёмные, с узором по краю, только пришивать их было уже некуда: все её пальто старик раздал весной.</p>
+        <p>Уголёк достал свою и положил рядом. Она подошла к остальным, как будто всю жизнь лежала с ними в одной жестянке.</p>
+        <p>Снежка села и сказала: странно.</p>
+        <p>Уголёк не понял, что тут странного. Пуговица нашлась в доме, где таких пуговиц полная жестянка. По его разумению, это было лучшее из возможных окончаний и можно было спать.</p>
+        <p>Снежка смотрела на жестянку и думала другое. Она думала, что пуговица потерялась не просто так, а в тот день, когда старик вернулся с кладбища, и что если пуговиц шесть, а на пальто нужно шесть, то, может быть, старик снял их сам. По одной. Каждый год по одной, чтобы пальто переставало быть тем пальто.</p>
+        <p>Тогда их надо вернуть все. Не одну.</p>
+        <p>Она сказала это вслух. Уголёк посмотрел на неё и впервые за всю свою жизнь сказал что-то сам, без подсказки.</p>
+        <p>Он сказал: тогда надо найти все.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-09-attic">
+        <div class="plate-inner">
+          <img src="img/ch-09-attic.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>шесть пуговиц на полу</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch10" data-n="10">
+      <div class="folio"><span class="folio-n">10</span></div>
+      <header class="ch-head">
+        <span class="ch-num">X</span>
+        <h2>Маяк</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">В</span> ту сторону, куда смотрело круглое окно, был маяк.</p>
+        <p>Снежка узнала его по книжке. В книжке он был нарисован одной прямой линией, а на самом деле луч был не прямой, а дрожащий, и он всегда возвращался на место через ровные промежутки времени.</p>
+        <p>Уголёк смотрел на луч и не мог понять, откуда он идёт. Снежка объяснила: иногда всё, что тебе нужно знать о мире, находится очень далеко, и ты видишь только его луч.</p>
+        <p>Уголёк спросил: а если я пойду к нему, он меня дождётся?</p>
+        <p>Снежка сказала: он никуда не уходит. Он светит по кругу и возвращается.</p>
+        <p>Старик поднялся на чердак за ними. Они не слышали, потому что седьмая ступенька его не предупредила. Он постоял в дверях, посмотрел на двух котов у открытого окна, на жестянку с пуговицами, которую они разложили на полу, и ничего не сказал.</p>
+        <p>Потом сел на сундук, взял пуговицу в руки и стал смотреть в окно.</p>
+        <p>Уголёк подумал, что сейчас будет крик или что-то тяжёлое, и прижался к полу. Снежка не прижалась. Она сидела рядом со стариком и смотрела на маяк.</p>
+        <p>Они сидели так долго. Свет возвращался.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-10-lighthouse">
+        <div class="plate-inner">
+          <img src="img/ch-10-lighthouse.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>он никуда не уходит</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch11" data-n="11">
+      <div class="folio"><span class="folio-n">11</span></div>
+      <header class="ch-head">
+        <span class="ch-num">XI</span>
+        <h2>Светляки</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">О</span>сенью они вышли за город, потому что Снежка вспомнила: на последних страницах книжки про маяк были нарисованы светляки, и она сказала, что хочет проверить, правда ли они такие.</p>
+        <p>Дождь шёл по улицам, но на поляне не шёл. Там трава стояла по грудь и пахла сыростью, а светляки начинались сразу за ней и не кончались.</p>
+        <p>Их было много, но не как звёзд. Звёзды лежат слоем, а светляки двигаются, каждый сам по себе, и поэтому небо на земле получается не таким, как наверху, а другим, живым.</p>
+        <p>Уголёк побежал за огоньком и не поймал. Потом за вторым и тоже не поймал. Потом перестал ловить и просто сел.</p>
+        <p>Снежка легла рядом. Уголёк спросил: они спят?</p>
+        <p>Снежка сказала: эти нет. Есть люди, которые днём спят, а ночью светят.</p>
+        <p>Уголёк долго молчал, а потом сказал: как мы.</p>
+        <p>Это было первое, что он сказал о них как об одном. Снежка услышала и промолчала, потому что от такого слова обычно становится тепло и хочется это не портить.</p>
+        <p>Они вернулись к утру, все в мокрой траве, и старик делал вид, что всю ночь не подходил к двери, хотя дверь на кухню была приоткрыта ровно настолько, чтобы в щель смотрело тепло.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-11-fireflies">
+        <div class="plate-inner">
+          <img src="img/ch-11-fireflies.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>на другом конце города</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch12" data-n="12">
+      <div class="folio"><span class="folio-n">12</span></div>
+      <header class="ch-head">
+        <span class="ch-num">XII</span>
+        <h2>Первый снег</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">П</span>ервый снег пошёл ночью, когда Уголёк уже привык считать, что знает про мир всё, кроме главного.</p>
+        <p>Он его не узнал. Сел у окна, смотрел на белые точки в темноте и думал, что это очень мелкий и очень медленный дождь, который не падает вниз, а висит. Потом увидел, что белое остаётся лежать на подоконнике.</p>
+        <p>Снежка сказала: это зима.</p>
+        <p>Уголёк прижался к стеклу ближе. Оба следа остались на стекле, один тёмный, другой светлый. Он подумал, что сейчас наступило что-то важное, но не знал, как это называется. А если не знаешь, как называется, то и говорить нечего.</p>
+        <p>Снежка думала про другое. Она думала про пальто.</p>
+      </div>
+      
+            <figure class="plate" data-plate="ch-12-snow">
+        <div class="plate-inner">
+          <img src="img/ch-12-snow.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>белое и медленное</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch13" data-n="13">
+      <div class="folio"><span class="folio-n">13</span></div>
+      <header class="ch-head">
+        <span class="ch-num">XIII</span>
+        <h2>Корзина</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">К</span> зиме старик снял пальто с гвоздя.</p>
+        <p>Он надел его, постоял перед зеркалом, подёргал за рукава, и видно было, что оно велико ему на два размера и что так было всегда, потому что раньше оно было на двоих.</p>
+        <p>Потом он сел к лампе, достал жестянку и высыпал пуговицы на стол.</p>
+        <p>Снежка пододвинула к нему последнюю. Он взял её, посмотрел на двух котов, и Уголёк понял, что сейчас будет что-то, к чему его никто не готовил.</p>
+        <p>Старик сказал: и ты тоже.</p>
+        <p>Он шил долго, как будто это было самое трудное дело в доме. Он пришивал их по одной. После каждой останавливался, держа иголку неподвижно, и тогда в комнате было слышно, как капает с крыши.</p>
+        <p>Потом он надел пальто, сел в кресло, и серая кошка пришла и легла ему на ноги.</p>
+        <p>Корзину поставили на кухонный стул. Кто её туда поставил, никто не помнил: может, старик, может, серая кошка. В корзине была белая ткань, немного пахнущая мылом, и там было ровно столько места, сколько двум кошкам хватает, если не толкаться.</p>
+        <p>То есть, если толкаться, тоже хватало.</p>
+        <p>Уголёк залез первым. Снежка встала рядом и посмотрела на него, и он подвинулся.</p>
+        <p>На плите грелся чайник. За окном шло шумное, большое, недоброе, но далёкое.</p>
+        <p>Никакая сказка не кончается тем, что всё плохое исчезло. Но иногда плохое просто становится далеко, а тепло становится близко. Этого достаточно.</p>
+      </div>
+      
+      <div class="game-wrap">
+        <div class="game-hud">
+          <span>найдено</span>
+          <span class="count"><span id="g1count">0</span> / 6</span>
+          <span class="dots" id="g1dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="field" id="sky">
+          <img class="bg" src="img/yarn.webp" alt="" width="1700" height="1133" loading="lazy" decoding="async">
+        </div>
+        <div class="win" id="g1win">
+          <p>Кошечка смотала их обратно, кроме одного. Тот остался у котёнка под лапой.</p>
+        </div>
+      </div>
+            <figure class="plate" data-plate="ch-13-basket">
+        <div class="plate-inner">
+          <img src="img/ch-13-basket.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>шесть пуговиц, по одной</figcaption>
+      </figure>
+    </section>
+    <section class="page" id="ch14" data-n="14">
+      <div class="folio"><span class="folio-n">14</span></div>
+      <header class="ch-head">
+        <span class="ch-num">XIV</span>
+        <h2>Рассвет</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">У</span>тро началось рано и без предупреждения. Оно всегда так.</p>
+        <p>Уголёк проснулся первым и пошёл к окну. Снаружи было розовое, и снег на крышах был тоже розовый, и мачта маяка вдалеке стояла прямо в этом розовом, как будто её поставили туда специально.</p>
+        <p>Снежка пришла через минуту. Он даже не услышал.</p>
+        <p>Они сидели рядом. Не потому, что так надо. Просто было удобно.</p>
+        <p>За их спинами старик в застёгнутом пальто спал в кресле. На воротнике у него блестели шесть пуговиц, и в утреннем свете они были похожи на маленькие окна.</p>
+        <p>Уголёк смотрел на маяк, который теперь знал по имени, на дождь, который умел ждать, и на белую кошечку рядом. Она была не домом и не светом, а тем, из-за чего дом и свет вообще нужны.</p>
+      </div>
+      
+      <div class="game-wrap">
+        <div class="game-hud">
+          <span>попыток</span>
+          <span class="count" id="g2count">0</span>
+        </div>
+        <div class="field night-field" id="stars">
+          <img class="bg" src="img/stars.webp" alt="" width="1700" height="1133" loading="lazy" decoding="async">
+          <div id="starLayer"></div>
+        </div>
+        <div class="thermo">
+          <span>тепло</span>
+          <span class="meter"><i id="starmeter"></i></span>
+          <span class="word" id="starword">ищи</span>
+        </div>
+        <div class="win" id="g2win">
+          <p>Это был фонарик на чужом чердаке, забытый с лета. Но с крыши он был совсем как звезда.</p>
+        </div>
+      </div>
+            <figure class="plate" data-plate="ch-14-dawn">
+        <div class="plate-inner">
+          <img src="img/ch-14-dawn.webp" alt="" loading="lazy" decoding="async" width="1400" height="933">
+        </div>
+        <figcaption>мачта прямо в розовом</figcaption>
+      </figure>
+    </section>
+    <section class="page page-game" id="ch15" data-n="15">
+      <div class="folio"><span class="folio-n">15</span></div>
+      <header class="ch-head">
+        <span class="ch-num">·</span>
+        <h2>Игра первая. Шесть клубков</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">Б</span>елая кошечка рассыпала шерсть по половицам. Чёрный котёнок сделал вид, что спит, но один глаз у него остался открыт.</p>
+        <p>Найди шесть клубков.</p>
+      </div>
+      
+      <div class="game-wrap">
+        <div class="puzzle-grid">
+          <div>
+            <div class="board" id="board"></div>
+            <div class="tray" id="tray"></div>
+          </div>
+          <div class="puzzle-side">
+            <p>Нажми на часть, потом на её место. Или перетащи.</p>
+            <button class="btn" id="ghostBtn" type="button" aria-pressed="true">
+              <span id="ghostLabel">отпечаток вкл</span>
+            </button>
+            <p style="margin-top:12px">
+              <button class="btn" id="shuffle" type="button">перемешать заново</button>
+            </p>
+            <p class="puz-stat">собрано <b id="g3count">0</b> / 6</p>
+          </div>
+        </div>
+        <div class="win" id="g3win">
+          <p>Луна, дорожка на воде, две фигурки на подоконнике. Вот он, этот вечер.</p>
+        </div>
+      </div>
+      
+    </section>
+    <section class="page page-game" id="ch16" data-n="16">
+      <div class="folio"><span class="folio-n">16</span></div>
+      <header class="ch-head">
+        <span class="ch-num">·</span>
+        <h2>Игра вторая. Не та звезда</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">К</span>ак-то ночью над крышами зажглась звезда не на своём месте. Она была тёплой, и от неё пахло домом.</p>
+        <p>Найди её.</p>
+      </div>
+      
+      
+    </section>
+    <section class="page page-game" id="ch17" data-n="17">
+      <div class="folio"><span class="folio-n">17</span></div>
+      <header class="ch-head">
+        <span class="ch-num">·</span>
+        <h2>Игра третья. Складка</h2>
+        <span class="ch-rule" aria-hidden="true"></span>
+      </header>
+      <div class="ch-body">
+        <p class="drop"><span class="cap">К</span>артина, которую котёнок видел из окна, рассыпалась на шесть частей.</p>
+        <p>Собери вечер обратно.</p>
+      </div>
+      
+      
+    </section>
+
+    <section class="colophon">
+      <img class="orn" src="img/vignette.webp" alt="" width="700" height="700">
+      <p>
+        На этом сказка кончается.<br>
+        Но окно осталось открытым.
+      </p>
+      <p style="font-family:var(--sans);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-faint)">
+        2 379 слов · 12 глав · 3 игры
+      </p>
+      <div class="seal" aria-label="печать 共">共</div>
+    </section>
+
+  </div>
+</div>
+
+<div class="toolbar" id="toolbar">
+  <button type="button" id="tocBtn">оглавление</button>
+  <span class="sep"></span>
+  <button type="button" id="prevBtn" aria-label="Предыдущая глава">назад</button>
+  <span class="pct" id="pct">0%</span>
+  <button type="button" id="nextBtn" aria-label="Следующая глава">дальше</button>
+  <span class="sep"></span>
+  <button type="button" id="topBtn">наверх</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- the pages, in order ---------- */
+  var pages = Array.prototype.slice.call(document.querySelectorAll(".page"));
+  var tocSection = document.querySelector(".toc");
+
+  /* ---------- reading progress ---------- */
+  var progress = document.getElementById("progress");
+  var pctEl = document.getElementById("pct");
+  var toolbar = document.getElementById("toolbar");
+
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop / max) : 0;
+    progress.style.width = (p * 100).toFixed(2) + "%";
+    pctEl.textContent = Math.round(p * 100) + "%";
+    toolbar.classList.toggle("show", h.scrollTop > 320);
+  }
+  document.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+
+  /* ---------- current page helper (for prev / next) ---------- */
+  function currentIndex(){
+    var mid = window.scrollY + window.innerHeight * 0.35;
+    var idx = 0;
+    for (var i = 0; i < pages.length; i++){
+      if (pages[i].offsetTop <= mid) idx = i;
+    }
+    return idx;
+  }
+
+  function gotoSection(el){
+    if(!el) return;
+    window.scrollTo({ top: el.offsetTop - 8, behavior: "smooth" });
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", function(){
+    var i = currentIndex();
+    // if we are well into a page, go to its start first
+    var p = pages[i];
+    if (p && window.scrollY - p.offsetTop > 200) { gotoSection(p); return; }
+    if (i > 0) gotoSection(pages[i-1]);
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", function(){
+    var i = currentIndex();
+    if (i < pages.length - 1) gotoSection(pages[i+1]);
+  });
+
+  document.getElementById("topBtn").addEventListener("click", function(){
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  document.getElementById("tocBtn").addEventListener("click", function(){
+    gotoSection(tocSection);
+  });
+
+  /* ---------- portrait plates should be narrower ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll(".plate img"), function(im){
+    if (im.naturalHeight > im.naturalWidth) im.closest(".plate").classList.add("tall");
+  });
+
+  /* ================= GAME 1 : yarn ================= */
+  var spots = [
+    { x: 23.0, y: 44.0 },
+    { x: 31.0, y: 27.5 },
+    { x: 42.0, y: 45.5 },
+    { x: 35.5, y: 65.0 },
+    { x: 72.0, y: 63.5 },
+    { x: 20.0, y: 79.5 }
+  ];
+
+  var sky = document.getElementById("sky");
+  var g1count = document.getElementById("g1count");
+  var g1dots = document.getElementById("g1dots") ? document.getElementById("g1dots").children : [];
+  var g1win = document.getElementById("g1win");
+  var found = 0;
+
+  if (sky) {
+    spots.forEach(function(sp, i){
+      var b = document.createElement("button");
+      b.className = "yarn";
+      b.type = "button";
+      b.style.left = sp.x + "%";
+      b.style.top = sp.y + "%";
+      b.style.animationDelay = (i * 0.5) + "s";
+      b.setAttribute("aria-label", "Клубок " + (i + 1));
+      b.addEventListener("click", function(){
+        if (b.classList.contains("found")) return;
+        b.classList.add("found");
+        var num = document.createElement("span");
+        num.className = "num";
+        num.textContent = String(found + 1);
+        b.appendChild(num);
+        found++;
+        g1count.textContent = found;
+        if (g1dots[found-1]) g1dots[found-1].classList.add("on");
+        if (found === spots.length) g1win.classList.add("show");
+      });
+      sky.appendChild(b);
+    });
+  }
+
+  /* ================= GAME 2 : the warm star ================= */
+  var starLayer = document.getElementById("starLayer");
+  var starsField = document.getElementById("stars");
+  var g2count = document.getElementById("g2count");
+  var meter = document.getElementById("starmeter");
+  var word = document.getElementById("starword");
+  var g2win = document.getElementById("g2win");
+
+  var seed = 20261029;
+  function rnd(){ seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+
+  var target = { x: 61.5, y: 26.5 };
+  var tries = 0, solved = false, unlocked = false;
+
+  function unlockStars(){
+    if (unlocked || !starLayer) return;
+    unlocked = true;
+    var frag = document.createDocumentFragment();
+
+    for (var i = 0; i < 84; i++){
+      var x = rnd() * 94 + 3;
+      var y = rnd() * 94 + 3;
+      var dx = x - target.x, dy = y - target.y;
+      if (Math.sqrt(dx*dx + dy*dy) < 9) continue;
+
+      var s = document.createElement("button");
+      s.className = "star";
+      s.type = "button";
+      s.tabIndex = -1;
+      s.setAttribute("aria-hidden", "true");
+      s.style.left = x + "%";
+      s.style.top = y + "%";
+      s.style.setProperty("--tw", (2.2 + rnd() * 3.4).toFixed(2) + "s");
+      s.addEventListener("click", function(ev){ probe(ev, false); });
+      frag.appendChild(s);
+    }
+
+    var heart = document.createElement("button");
+    heart.className = "heart-hit";
+    heart.type = "button";
+    heart.id = "heart";
+    heart.style.left = target.x + "%";
+    heart.style.top = target.y + "%";
+    heart.setAttribute("aria-label", "Тёплая звезда");
+    heart.addEventListener("click", function(ev){ ev.stopPropagation(); probe(ev, true); });
+    frag.appendChild(heart);
+
+    starLayer.appendChild(frag);
+
+    starsField.addEventListener("click", function(ev){
+      if (ev.target === starsField || ev.target.classList.contains("bg")) probe(ev, false);
+    });
+
+    requestAnimationFrame(function(){ starsField.classList.add("ready"); });
+  }
+
+  // unlock when the game page scrolls into view
+  if (starsField && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) unlockStars(); });
+    }, { rootMargin: "200px" });
+    io.observe(starsField);
+  } else {
+    unlockStars();
+  }
+
+  function probe(ev, isHeart){
+    if (solved) return;
+    tries++;
+    if (g2count) g2count.textContent = tries;
+
+    var r = starsField.getBoundingClientRect();
+    var mx = ((ev.clientX - r.left) / r.width) * 100;
+    var my = ((ev.clientY - r.top) / r.height) * 100;
+
+    var mark = document.createElement("span");
+    mark.className = "reticle";
+    mark.style.left = mx + "%";
+    mark.style.top = my + "%";
+    starsField.appendChild(mark);
+    setTimeout(function(){ if (mark.parentNode) mark.remove(); }, 740);
+
+    var dx = mx - target.x, dy = my - target.y;
+    var d = Math.sqrt(dx*dx + dy*dy);
+
+    var heat, label;
+    if (isHeart || d < 3.4){ heat = 100; label = "нашла"; }
+    else if (d < 9){ heat = 78; label = "очень тепло"; }
+    else if (d < 18){ heat = 52; label = "теплее"; }
+    else if (d < 32){ heat = 26; label = "прохладно"; }
+    else { heat = 8; label = "холодно"; }
+
+    if (meter) meter.style.width = heat + "%";
+    if (word) word.textContent = label;
+
+    if (heat === 100){
+      solved = true;
+      var h = document.getElementById("heart");
+      if (h) h.classList.add("marked");
+      if (g2win) g2win.classList.add("show");
+    }
+  }
+
+  /* ================= GAME 3 : puzzle ================= */
+  var COLS = 3, ROWS = 2, TOTAL = COLS * ROWS;
+  var board = document.getElementById("board");
+  var tray = document.getElementById("tray");
+  var g3count = document.getElementById("g3count");
+  var g3win = document.getElementById("g3win");
+  var ghostBtn = document.getElementById("ghostBtn");
+  var ghostLabel = document.getElementById("ghostLabel");
+  var shuffleBtn = document.getElementById("shuffle");
+
+  var ghostOn = true, placed = 0, chosen = null;
+  var order = [1,2,3,4,5,6];
+
+  function buildBoard(){
+    if (!board) return;
+    board.innerHTML = "";
+    for (var r = 0; r < ROWS; r++){
+      for (var c = 0; c < COLS; c++){
+        var idx = r * COLS + c + 1;
+        var sl = document.createElement("div");
+        sl.className = "slot";
+        sl.dataset.answer = idx;
+        sl.style.setProperty("--ghost", "url('img/scene.webp')");
+        sl.style.setProperty("--gx", (c * 50) + "%");
+        sl.style.setProperty("--gy", (r * 100) + "%");
+        sl.addEventListener("click", function(){ tryPlace(chosen, this); });
+        sl.addEventListener("dragover", function(e){ e.preventDefault(); this.classList.add("hot"); });
+        sl.addEventListener("dragleave", function(){ this.classList.remove("hot"); });
+        sl.addEventListener("drop", function(e){
+          e.preventDefault();
+          this.classList.remove("hot");
+          var key = e.dataTransfer.getData("text/plain");
+          if (key) tryPlace(parseInt(key, 10), this);
+        });
+        board.appendChild(sl);
+      }
+    }
+    board.classList.toggle("no-ghost", !ghostOn);
+  }
+
+  function buildTray(){
+    if (!tray) return;
+    tray.innerHTML = "";
+    order.forEach(function(idx){
+      var b = document.createElement("button");
+      b.className = "piece";
+      b.type = "button";
+      b.dataset.key = idx;
+      b.draggable = true;
+      b.setAttribute("aria-label", "Часть " + idx);
+
+      var im = document.createElement("img");
+      im.src = "img/piece-" + idx + ".webp";
+      im.alt = "";
+      im.loading = "lazy";
+      im.decoding = "async";
+      b.appendChild(im);
+
+      b.addEventListener("click", function(){
+        if (b.classList.contains("placed")) return;
+        if (chosen === idx){
+          chosen = null;
+          b.classList.remove("chosen");
+        } else {
+          chosen = idx;
+          Array.prototype.forEach.call(tray.children, function(x){ x.classList.remove("chosen"); });
+          b.classList.add("chosen");
+        }
+      });
+
+      b.addEventListener("dragstart", function(e){
+        e.dataTransfer.setData("text/plain", String(idx));
+        e.dataTransfer.effectAllowed = "move";
+      });
+
+      tray.appendChild(b);
+    });
+  }
+
+  function tryPlace(key, slot){
+    if (key == null || !slot || slot.classList.contains("filled")) return;
+    if (parseInt(slot.dataset.answer, 10) !== key) return;
+
+    var im = new Image();
+    im.src = "img/piece-" + key + ".webp";
+    im.alt = "";
+    slot.appendChild(im);
+    slot.classList.add("filled");
+
+    var pb = tray.querySelector('.piece[data-key="' + key + '"]');
+    if (pb){ pb.classList.add("placed"); pb.classList.remove("chosen"); }
+    chosen = null;
+    placed++;
+    if (g3count) g3count.textContent = placed;
+    if (placed === TOTAL && g3win) g3win.classList.add("show");
+  }
+
+  function setGhost(on){
+    ghostOn = on;
+    if (ghostBtn) ghostBtn.setAttribute("aria-pressed", String(on));
+    if (ghostLabel) ghostLabel.textContent = on ? "отпечаток вкл" : "отпечаток выкл";
+    if (board) board.classList.toggle("no-ghost", !on);
+  }
+
+  function resetPuzzle(){
+    placed = 0;
+    chosen = null;
+    if (g3count) g3count.textContent = "0";
+    if (g3win) g3win.classList.remove("show");
+    for (var i = order.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+    buildBoard();
+    buildTray();
+  }
+
+  if (board) {
+    buildBoard();
+    buildTray();
+    if (ghostBtn) ghostBtn.addEventListener("click", function(){ setGhost(!ghostOn); });
+    if (shuffleBtn) shuffleBtn.addEventListener("click", resetPuzzle);
+  }
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener("keydown", function(e){
+    if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.target && e.target.tagName === "BUTTON") return;
+    var k = e.key;
+    if ((k === "ArrowRight" || k === "PageDown") && !e.altKey && !e.ctrlKey && !e.metaKey){
+      var i = currentIndex();
+      if (i < pages.length - 1){
+        e.preventDefault();
+        gotoSection(pages[i+1]);
+      }
+    } else if ((k === "ArrowLeft" || k === "PageUp") && !e.altKey && !e.ctrlKey && !e.metaKey){
+      var j = currentIndex();
+      var p = pages[j];
+      if (p && window.scrollY - p.offsetTop > 200){ e.preventDefault(); gotoSection(p); return; }
+      if (j > 0){ e.preventDefault(); gotoSection(pages[j-1]); }
+    }
+  });
+
+})();
+</script>
+</body>
+</html>
